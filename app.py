@@ -20,14 +20,19 @@ io.setmode(io.BCM)
 # Create a dictionary called pins to store the pin number, name, and pin state:
 hosts = {
    'pis' : {'pin' : 24, 'state' : 'unk' ,'ini' :'' },
-   'pij' : {'pin' : 23, 'state' : 'unk' ,'ini' :'' }
+   'pij' : {'pin' : 23, 'state' : 'unk' ,'ini' :'' },
+   'comj' : {'pin' : 5, 'state' : 'unk' ,'ini' :'' },
+   'coms' : {'pin' : 5, 'state' : 'unk' ,'ini' :'' ,'on':'disabled'}
    }
 
 
 def getRunningDetails(host):
    if hosts[host].get('state') == 'up':
-      runon = f"ssh pi@{host} "
-      hosts[host]['temp'] = subprocess.check_output(runon + "vcgencmd measure_temp",timeout=3, shell=True).decode('utf-8').replace('\r', '').replace('\n', '')
+      runon = f"ssh {host} "
+      if 'com' not in host:
+         hosts[host]['temp'] = subprocess.check_output(runon + "vcgencmd measure_temp",timeout=3, shell=True).decode('utf-8').replace('\r', '').replace('\n', '')
+      else :
+         hosts[host]['temp'] = 'unk'
       cpucommand = "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}'"
       hosts[host]['cpu'] = subprocess.check_output(runon + cpucommand,timeout=3, shell=True).decode('utf-8').replace('\r', '').replace('\n', '')
 
@@ -62,12 +67,18 @@ def startHost(host):
    if getHostStatus(host) !='up' :
       hostDict['ini'] = 'up' 
       pulseit(hostDict['pin'])
+   if 'comj' in host:
+      cmd = f'wakeonlan d8:d3:85:23:89:53'
+      os.system(cmd)
+   if 'coms' in host:
+      hostDict['ini'] = 'down' 
+      hostDict['status'] = 'down' 
 
 def shutdownHost(host):
    hostDict = hosts[host]
    if getHostStatus(host) !='down':
       hostDict['ini'] = 'down' 
-      cmd = f'ssh pi@{host} sudo shutdown'
+      cmd = f'ssh {host} sudo shutdown'
       os.system(cmd)
 
 

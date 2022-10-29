@@ -14,13 +14,14 @@
    {% for host, hostdict in hosts.items() %}
    <h2>{{ host }} is currently processing {{hostdict['ini']}} 
     <a href="/{{host}}/status" class="btn btn-primary btn-sm" role="button">Refresh</a>
+    {% set disable = hostdict.get("on","") %}
    {% if hostdict['state'] == 'up' %}
       is currently <strong>on</strong> </h2><div class="row"><div class="col-md-2">
       <h4>{{hostdict['temp']}}  cpu:{{hostdict['cpu']}} </h4>
       <a href="/{{host}}/down" class="btn btn-block btn-lg btn-default" role="button">Turn off</a></div></div>
    {% else %}
       is currently <strong>off</strong></h2><div class="row"><div class="col-md-2">
-      <a href="/{{host}}/up" class="btn btn-block btn-lg btn-primary" role="button">Turn on</a></div></div>
+      <a href="/{{host}}/up" class="btn btn-block btn-lg btn-primary" role="button" {{disable}}>Turn on</a></div></div>
    {% endif %}
    {% endfor %}
 </body>

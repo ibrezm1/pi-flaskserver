@@ -1,0 +1,15 @@
+Host coms
+  HostName coms
+  User ibrez
+Host pij
+  HostName pij
+  user pi
+Host pis
+  HostName pis
+  user pi
+Host pik
+  HostName pik
+  user pi 
+Host comj
+  HostName comj
+  user ibrezm
