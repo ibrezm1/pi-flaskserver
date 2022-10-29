@@ -15,6 +15,6 @@
   349  scp app.py   pik:/home/pi/flask-app
   350  ssh pik
   351  scp templates/main.html    pik:/home/pi/flask-app/templates
-  352  history [20]
+  352  scp static/*.txt    pik:/home/pi/flask-app/static/
   353  history 20
   354  history 20 > commands.hist

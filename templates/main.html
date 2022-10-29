@@ -11,6 +11,9 @@
 
 <body>
    <h1>RPi Web Server</h1>
+   <a href="/hosts.txt">hosts</a>|&nbsp &nbsp &nbsp
+   <a href="/ssh_config.txt">ssh_config</a> |&nbsp &nbsp &nbsp
+   <a href="/visudo.txt">visudo</a> |&nbsp &nbsp &nbsp
    {% for host, hostdict in hosts.items() %}
    <h2>{{ host }} is currently processing {{hostdict['ini']}} 
     <a href="/{{host}}/status" class="btn btn-primary btn-sm" role="button">Refresh</a>

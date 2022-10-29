@@ -13,7 +13,23 @@ from time import sleep
 import os
 import json
 import subprocess
-app = Flask(__name__)
+
+import logging
+
+logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+    datefmt='%Y-%m-%d:%H:%M:%S',
+    level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
+logger.debug("This is a debug log")
+logger.info("This is an info log")
+logger.critical("This is critical")
+logger.error("An error occurred")
+
+app = Flask(__name__,
+            static_url_path='', 
+            static_folder='static'
+            )
 
 io.setmode(io.BCM)
 
@@ -75,9 +91,11 @@ def startHost(host):
       hostDict['status'] = 'down' 
 
 def shutdownHost(host):
+   logger.info("20 This is an info log in shutdown")
    hostDict = hosts[host]
    if getHostStatus(host) !='down':
       hostDict['ini'] = 'down' 
+      logger.info("30 This is an info log in command call")
       cmd = f'ssh {host} sudo shutdown'
       os.system(cmd)
 
@@ -99,6 +117,7 @@ def action(changeHost, action):
       if action == 'up':
          startHost(changeHost)
       elif action == 'down':
+         logger.info("call to shutdown 10")
          shutdownHost(changeHost)
 
    json.dump(hosts,open("hoststatus.json","w"))
