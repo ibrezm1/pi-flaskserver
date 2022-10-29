@@ -11,6 +11,8 @@ import RPi.GPIO as io
 from flask import Flask, render_template, request
 from time import sleep
 import os
+import json
+import subprocess
 app = Flask(__name__)
 
 io.setmode(io.BCM)
@@ -21,12 +23,22 @@ hosts = {
    'pij' : {'pin' : 23, 'state' : 'unk' ,'ini' :'' }
    }
 
+
+def getRunningDetails(host):
+   if hosts[host].get('state') == 'up':
+      runon = f"ssh pi@{host} "
+      hosts[host]['temp'] = subprocess.check_output(runon + "vcgencmd measure_temp",timeout=3, shell=True).decode('utf-8').replace('\r', '').replace('\n', '')
+      cpucommand = "grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {print usage \"%\"}'"
+      hosts[host]['cpu'] = subprocess.check_output(runon + cpucommand,timeout=3, shell=True).decode('utf-8').replace('\r', '').replace('\n', '')
+
 def getHostStatus(host):
    status =  'up' if os.system("fping -c1 -t500 " + host) == 0 else 'down'
    hostDict = hosts[host]
    hostDict['state']  = status
    if hostDict['ini'] == status:
       hostDict['ini']  = ''
+   if status == 'up' and hostDict['ini']  == '' :
+      getRunningDetails(host)
    return status
 
 
@@ -59,6 +71,7 @@ def shutdownHost(host):
       os.system(cmd)
 
 
+
 @app.route("/")
 def main():
    print(hosts)
@@ -76,6 +89,8 @@ def action(changeHost, action):
          startHost(changeHost)
       elif action == 'down':
          shutdownHost(changeHost)
+
+   json.dump(hosts,open("hoststatus.json","w"))
    print(hosts)
    return render_template('main.html', hosts=hosts)
 
