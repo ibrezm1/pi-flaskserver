@@ -1,0 +1,20 @@
+  335  scp templates/main.html  pik:/tmp
+  336  scp app.py   pik:/home/pi/flask-app
+  337  scp templates/main.html    pik:/home/pi/flask-app/templates
+  338  ping pis
+  339  scp templates/main.html    pik:/home/pi/flask-app/templates
+  340  scp app.py   pik:/home/pi/flask-app
+  341  ping pis
+  342  ping pij
+  343  ssh pij sudo shutdown
+  344  ssh pis sudo shutdown
+  345  ping pij
+  346  ping pis
+  347  scp app.py   pik:/home/pi/flask-app
+  348  scp templates/main.html    pik:/home/pi/flask-app/templates
+  349  scp app.py   pik:/home/pi/flask-app
+  350  ssh pik
+  351  scp templates/main.html    pik:/home/pi/flask-app/templates
+  352  history [20]
+  353  history 20
+  354  history 20 > commands.hist
