@@ -1,0 +1,10 @@
+[Unit]
+Description=Flask Pi Server
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/pi/flask-app
+ExecStart=python app.py
+
+[Install]
+WantedBy=multi-user.target
